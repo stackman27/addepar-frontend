@@ -30,7 +30,7 @@ class Transaction:
         self.transaction_type = transaction_type
 
     def add_effect(self):
-
+        pass
 
     def __repr__(self):
         return "FG_TX_{0}: (date={1}, type={2})".format(self.tx_i, self.date, self.transaction_type)
