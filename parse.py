@@ -33,11 +33,18 @@ class Transaction:
         pass
 
     def __repr__(self):
-        return "FG_TX_{0}: (date={1}, type={2})".format(self.tx_i, self.date, self.transaction_type)
+        return "FG_TRANSACTION_{0}: (date={1}, transaction_type={2})".format(self.tx_i, self.date, self.transaction_type)
 
 class Effect:
-    def __init__(self):
-        pass
+    def __init__(self, e_i, tx_i, edge_i, value, currency, is_credit):
+        self.e_i = e_i
+        self.tx_i = tx_i
+        self.edge_i = edge_i
+        self.value = value
+        self.currency = currency
+        self.is_credit = is_credit
+    def __repr__(self):
+        return "FG_EFFECT_{0}: (tx_i={1}, edge_i={2}, value={3}, currency={4}, is_credit={5})".format(self.e_i, self.tx_i, self.edge_i, self.value, self.currency, self.is_credit)
 
 def import_nodes(file):
     with open(file, 'r') as file:
@@ -45,35 +52,65 @@ def import_nodes(file):
         for i in range(1, len(reader)):
             row = reader[i]
             # this case doesn't have ownership type or investment type
+            node_i = int(row[0])
             if row[1] == "PERSON_NODE" or row[1] == "GENERIC_COMPANY_GRAPH_NODE":
-                fg_nodes[int(row[0])] = Node(row[0], row[1])
+                fg_nodes[node_i] = Node(node_i, row[1])
             else:
-                fg_nodes[int(row[0])] = Node(row[0], row[1], row[4], row[5])
+                fg_nodes[node_i] = Node(node_i, row[1], row[4], row[5])
 
 def import_edges(file):
     with open(file, 'r') as file:
         reader = list(csv.reader(file))
         for i in range(1, len(reader)):
             row = reader[i]
-            fg_edges[int(row[0])] = Edge(int(row[0]), row[1], row[2])
+            edge_i = int(row[0])
+            fg_edges[edge_i] = Edge(edge_i, row[1], row[2])
 
 def import_transactions(file):
     with open(file, 'r') as file:
         reader = list(csv.reader(file))
         for i in range(1, len(reader)):
             row = reader[i]
-            fg_transactions[int(row[0])] = Transaction(int(row[0]), row[1], row[2])
+            tx_i = int(row[0])
+            fg_transactions[tx_i] = Transaction(tx_i, row[1], row[2])
 
+def import_effects(file):
+    with open(file, 'r') as file:
+        reader = list(csv.reader(file))
+        for i in range(1, len(reader)):
+            row = reader[i]
+            e_i = int(row[0])
+            tx_i = int(row[1])
+            edge_i = int(row[2])
+            value = float(row[3])
+            currency = row[4]
+            is_credit = int(row[5])
 
+            if tx_i in fg_effects:
+                effect = fg_effects[tx_i]
+                if effect.edge_i != edge_i:
+                    print("tx_i " + row[1] + " edge_i != row[2]" + row[2])
+                if effect.currency != row[4]:
+                    print("currency " + effect.currency + " currency != row[4]" + row[4])
+                if effect.is_credit == 1:
+                    effect.value += value
+                else:
+                    effect.value -= value
+            else:
+                fg_effects[tx_i] = Effect(e_i, tx_i, edge_i, value, currency, is_credit)
 
 fg_nodes = {}
 fg_edges = {}
 fg_transactions = {}
+fg_effects = {}
 
 import_nodes("data/nodes.csv")
 import_edges("data/edges.csv")
 import_transactions("data/transactions.csv")
+import_effects("data/transaction_effects.csv")
+
 print(fg_nodes[1])
 print(fg_edges[58])
 print(fg_transactions[22])
+print(fg_effects[1])
 
