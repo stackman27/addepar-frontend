@@ -9,7 +9,6 @@ class Node:
     def __repr__(self):
         return "FG_NODE_{0}: (investment_class={1}, ownership_type={2}, investment_type={3})".format(self.node_i, self.investment_class, self.ownership_type, self.investment_type)
 
-
 class Edge:
     def __init__(self, edge_i, start, end):
         self.edge_i = edge_i
@@ -28,21 +27,27 @@ class Transaction:
         self.tx_i = tx_i
         self.date = date
         self.transaction_type = transaction_type
+        self.effect = None
 
-    def add_effect(self):
-        pass
+    def add_effect(self, effect):
+        self.effect = effect
 
     def __repr__(self):
-        return "FG_TRANSACTION_{0}: (date={1}, transaction_type={2})".format(self.tx_i, self.date, self.transaction_type)
+        return "FG_TRANSACTION_{0}: (date={1}, transaction_type={2}, effect={3})".format(self.tx_i, self.date, self.transaction_type, self.effect)
 
 class Effect:
     def __init__(self, e_i, tx_i, edge_i, value, currency, is_credit):
         self.e_i = e_i
         self.tx_i = tx_i
         self.edge_i = edge_i
-        self.value = value
         self.currency = currency
-        self.is_credit = is_credit
+        self.is_credit = int(is_credit)
+        
+        if self.is_credit == 1:
+            self.value = value
+        else:
+            self.value = value * -1
+
     def __repr__(self):
         return "FG_EFFECT_{0}: (tx_i={1}, edge_i={2}, value={3}, currency={4}, is_credit={5})".format(self.e_i, self.tx_i, self.edge_i, self.value, self.currency, self.is_credit)
 
@@ -89,16 +94,45 @@ def import_effects(file):
             if tx_i in fg_effects:
                 effect = fg_effects[tx_i]
                 if effect.edge_i != edge_i:
-                    print("tx_i " + row[1] + " edge_i != row[2]" + row[2])
-                if effect.currency != row[4]:
-                    print("currency " + effect.currency + " currency != row[4]" + row[4])
-                if effect.is_credit == 1:
+                    print("tx_i " + row[1] + " edge_i != row[2]" + edge_i)
+                if effect.currency != currency:
+                    print("currency " + effect.currency + " currency != row[4] " + currency)
+                if is_credit == 1:
                     effect.value += value
                 else:
                     effect.value -= value
+                fg_effects[tx_i] = effect
             else:
                 fg_effects[tx_i] = Effect(e_i, tx_i, edge_i, value, currency, is_credit)
 
+def fill_transactions_with_effects():
+    for tx_i, fg_effect in fg_effects.items():
+        # print("tx_i=" + str(tx_i))
+        fg_transaction = fg_transactions[tx_i]
+        fg_transaction.add_effect(fg_effect)
+
+def convert_nodes_to_smart_contracts():
+    for node in fg_nodes:
+        pass
+        #node.node_i 
+        #node.investment_class 
+        #node.ownership_type
+        #node.investment_type
+
+def run_transactions():
+    for tx_i, fg_transaction in fg_transactions.items():
+        pass
+        #fg_transaction.tx_i 
+        #fg_transaction.date 
+        #fg_transaction.transaction_type
+        #effect = fg_transaction.effect
+
+        #effect.e_i
+        #effect.tx_i
+        #effect.edge_i
+        #effect.currency
+        #effect.is_credit
+        
 fg_nodes = {}
 fg_edges = {}
 fg_transactions = {}
@@ -109,8 +143,20 @@ import_edges("data/edges.csv")
 import_transactions("data/transactions.csv")
 import_effects("data/transaction_effects.csv")
 
+# List of fg_transactions
+# Transaction From to Nodes
+
 print(fg_nodes[1])
 print(fg_edges[58])
 print(fg_transactions[22])
 print(fg_effects[1])
 
+print ("Num Effects=" + str(len(fg_effects)))
+#tx_id=22, edge_id=1, 
+#transaction_effect_id = 20, 1434, 2410
+fill_transactions_with_effects()
+print(fg_transactions[22])
+
+convert_nodes_to_smart_contracts()
+
+#run_transactions()
