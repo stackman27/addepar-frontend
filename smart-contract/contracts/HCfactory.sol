@@ -1,5 +1,4 @@
 pragma solidity ^0.8.0;
-
 import "./IndivHC.sol";
 
 contract HCfactory {
@@ -9,16 +8,23 @@ contract HCfactory {
         address hcaddr;
     }
     mapping(string => HoldingCompany) private companies;
+    event HCCreated(address hcaddr, uint256 id);
 
     // Question: every companies intially own company shares or just consider the equities of stocks?
-    function createHC(string calldata _name, address _company_shares) external returns(address){
+    function createHC(string calldata _name) external returns(address){
         // TODO: IndivHC.sol implement 후 수정할 것
-        IndivHC company = new IndivHC(_name, _company_shares, msg.sender);
+        IndivHC company = new IndivHC(_name, msg.sender);
         addr = address(company);
-        companies[_name].name = _name;
-        companies[_name].hcaddr = addr;
+        HoldingCompany newcompstruct = new HoldingCompany(_name, addr);
+        companies[_name] = newcompstruct;
+        // companies[_name].name = _name;
+        // companies[_name].hcaddr = addr;
         return addr;
     }
+
+    // function getHC(string calldata _name) external view returns(HoldingCompany){
+    //     return companies[_name];
+    // }
 
     function getHCAddr(string calldata _name) external view returns(address){
         return companies[_name].hcaddr;
@@ -49,4 +55,3 @@ Private Equity Contract
 Holding Company NFT Contract
 - For creating NFT for value assets
 */
-
