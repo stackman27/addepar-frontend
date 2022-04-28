@@ -42,9 +42,11 @@ contract IndivHC is Ownable {
     // 2. Commitment Reduction
     // 3. Contribution
     // 4. Edge fee
-    function commitment(uint256 from_node_id, uint256 to_node_id, uint256 amount, uint schedule) public {
+    function commitment(uint256 from_node_id, uint256 to_node_id, uint256 amount, uint schedule) external {
         address from_asset = AssetFactory.assets[from_node_id].assetAddr;
         address to_asset = AssetFactory.assets[to_node_id].assetAddr;
+
+        from_asset.transfer(amount ether);
 
     }
 
