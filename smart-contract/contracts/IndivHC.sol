@@ -1,7 +1,5 @@
 pragma solidity ^0.8.0;
 import "./AssetFactory.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 // TODO:
 // 1. Event check
@@ -45,9 +43,8 @@ contract IndivHC is Ownable {
     // 3. Contribution
     // 4. Edge fee
     function commitment(uint256 from_node_id, uint256 to_node_id, uint256 amount, uint schedule) public {
-        address from_asset = AssetFactory.assets[from_node_id];
-        address to_asset = AssetFactory.assets[to_node_id];
-
+        address from_asset = AssetFactory.assets[from_node_id].assetAddr;
+        address to_asset = AssetFactory.assets[to_node_id].assetAddr;
 
     }
 
