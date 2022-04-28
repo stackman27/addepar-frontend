@@ -12,7 +12,7 @@ import "./AssetFactory.sol";
 
 contract IndivHC is Ownable {
     using SafeMath for uint256;
-    ERC20Interface private company_shares;
+    // IERC20 private company_shares;
     string name;
     struct CommitInfo {
         uint256 from_node_id;
