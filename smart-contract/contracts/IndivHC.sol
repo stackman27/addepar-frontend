@@ -14,15 +14,25 @@ contract IndivHC is Ownable {
     using SafeMath for uint256;
     // IERC20 private company_shares;
     string name;
+    address addr;
+    struct Asset {
+        uint256 id;
+        string class;
+        string name;
+        string currency;
+        string ownership_type;
+        string investment_type;
+        address assetAddr;
+    }
     struct CommitInfo {
         uint256 from_node_id;
         uint256 to_node_id;
         uint256 amount;
         uint scheduled_date;
     }
-
     event TransactionOccured(address tr, uint256 transaction_id);
-
+    mapping(uint256 => Asset) assets; // key: id (node id)    value: Asset Struct
+    mapping(uint256 => []CommitInfo);
     // company_shares = EIP20Interface(_company_shares);
     // address _company_shares
     constructor(string _name, address _owner) public {
@@ -42,9 +52,43 @@ contract IndivHC is Ownable {
     // 2. Commitment Reduction
     // 3. Contribution
     // 4. Edge fee
-    function commitment(uint256 from_node_id, uint256 to_node_id, uint256 amount, uint schedule) external {
-        address from_asset = AssetFactory.assets[from_node_id].assetAddr;
-        address to_asset = AssetFactory.assets[to_node_id].assetAddr;
+
+    function createValBasedAsset(uint256 _id, string _class, string _name, string _currency, string _owntype, string _investype) external returns(address) {
+        ValBasedAsset valAsset = new ValBasedAsset();
+        addr = address(valAsset);
+        Asset newasset = new Asset(_id, _class, _name, _currency, _owntype, _investype, addr);
+        assets[_id] = newasset;
+        // assets[_id].id = _id;
+        // assets[_id].class = _class;
+        // assets[_id].name = _name;
+        // assets[_id].currency = _currency;
+        // assets[_id].ownership_type = _owntype;
+        // assets[_id].investment_type = _investype;
+        // assets[_id].assetAddr = addr;
+        return addr;
+    }
+
+    function createPerBasedAsset(uint256 _id, string _class, string _name, string _currency, string _owntype, string _investype, string _symbol) external returns(address) {
+        PerBasedAsset perAsset = new PerBasedAsset();
+        addr = address(perAsset);
+        Asset newasset = new Asset(_id, _class, _name, _currency, _owntype, _investype, addr);
+        assets[_id] = newasset;
+        // assets[_id].id = _id;
+        // assets[_id].class = _class;
+        // assets[_id].name = _name;
+        // assets[_id].currency = _currency;
+        // assets[_id].ownership_type = _owntype;
+        // assets[_id].investment_type = _investype;
+        // assets[_id].assetAddr = addr;
+        return addr;
+    }
+
+    // Future: include from_node_id
+    // For now: most of the transactions are from holding company, except for 2 transactions, took out 
+    function commitment(uint256 to_node_id, uint256 amount, uint schedule) external {
+        address to_asset = assets[to_node_id].assetAddr;
+
+        CommitInfo newcommit = new CommitInfo(from_node_id, to_node_id, amount, schedule);
 
         from_asset.transfer(amount ether);
 
