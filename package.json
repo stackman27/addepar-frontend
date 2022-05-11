@@ -1,0 +1,32 @@
+{
+  "name": "blockchain-at-berkeley",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Addepar/blockchain-at-berkeley.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Addepar/blockchain-at-berkeley/issues"
+  },
+  "homepage": "https://github.com/Addepar/blockchain-at-berkeley#readme",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-etherscan": "^3.0.3",
+    "ethers": "^5.6.5",
+    "hardhat": "^2.9.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  }
+}
