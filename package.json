@@ -27,6 +27,7 @@
     "hardhat": "^2.9.3"
   },
   "dependencies": {
+    "csv": "^6.0.5",
     "dotenv": "^16.0.0"
   }
 }

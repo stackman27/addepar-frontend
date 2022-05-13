@@ -122,10 +122,6 @@ def write_nodes_to_csv(file):
             node = fg_nodes[node_id]
             data = [node.node_i, node.investment_class, node.ownership_type, node.investment_type]
             writer.writerow(data)
-            #node.node_i 
-            #node.investment_class 
-            #node.ownership_type
-            #node.investment_type
 
 def write_transactions_to_csv(file):
     with open(file, 'w') as file:
