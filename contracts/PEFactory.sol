@@ -7,6 +7,7 @@ contract PEFactory {
     mapping(uint256 => address) private private_equities;
     // need to keep the address of the NFTFactory
     address nftFactory;
+    event newPE(address pe);
 
     constructor(address _nftFactory) {
         nftFactory = _nftFactory;
@@ -16,6 +17,7 @@ contract PEFactory {
         PrivateEquity pe = new PrivateEquity(id, nftFactory);
         address addr = address(pe);
         private_equities[id] = addr;
+        emit newPE(addr);
         return addr;
     }
 }

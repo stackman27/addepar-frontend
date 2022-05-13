@@ -10,14 +10,16 @@ contract NFTFactory is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
+    event NFTMinted(address to, string uri);
 
     constructor() ERC721("PrivateEquity", "PEQ") {}
 
-    function safeMint(address to, string memory uri) public onlyOwner {
+    function safeMint(address to, string memory uri) public {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
+        emit NFTMinted(to, uri);
     }
 
     // The following functions are overrides required by Solidity.

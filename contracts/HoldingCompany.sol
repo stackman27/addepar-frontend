@@ -36,13 +36,13 @@ contract HoldingCompany {
     }
 
     // User contributes amount of holding company's funds to private equity
-    function contribute(address to, uint256 amount) public returns (uint256) {
+    function contribute(address to, uint256 amount, uint256 txId) public returns (uint256) {
         commitments[to] = 0;
-        /*
-        (bool success, bytes memory result) = to.call{value: 1 ether, gas: 1000000}(abi.encodeWithSignature("myFunction(uint,address)", 10, msg.sender));
-        (uint a, uint b) = abi.decode(result, (uint, uint));
-        */
-        emit TransferOccurred(to, amount);
-        return amount;
+        (bool success, bytes memory result) = to.call{value: amount, gas: 1000000}(abi.encodeWithSignature("contribute(uint,uint)", amount, txId));
+        if (success) {
+            emit TransferOccurred(to, amount);
+            return amount;
+        }
+        return 0;
     }
 }
