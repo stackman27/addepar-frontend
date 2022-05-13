@@ -1,17 +1,20 @@
 const fs = require("fs");
 const { parse } = require("csv-parse");
-const url = "parsed/nodes.csv";
+const url = "parsed/transactions.csv";
 
 fs.createReadStream(url)
 .pipe(parse({ delimiter: ",", from_line: 2 }))
-.on("data", function (node) {
-    let node_i = node.node_i;
-    let investment_class = node.investment_class;
-    let ownership_type = node.ownership_type;
-    let investment_type = node.investment_type;
-
-    console.log(node);
-    //const hello_world = await HelloWorld.deploy(node_i, investment_class, ownership_type,investment_type );
+.on("data", function (tx) {
+    let tx_i = tx[0];
+    let date = tx[1];
+    let transaction_type = tx[2];
+    let e_i =  tx[3];
+    let e_tx_i =  tx[4];
+    let e_edge_i =  tx[5];
+    let e_currency =  tx[6];
+    let e_is_credit =  tx[7];
+    
+    //const hello_world = await HelloWorld.deploy(tx_i,date,transaction_type,e_i,e_tx_i,e_edge_i,e_currency,e_is_credit);
     //const hello_world = await HelloWorld.deploy("Hello World!");
     //console.log("Contract deployed to address " + hello_world.address)
 });

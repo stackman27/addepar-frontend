@@ -111,27 +111,28 @@ def fill_transactions_with_effects():
         fg_transaction = fg_transactions[tx_i]
         fg_transaction.add_effect(fg_effect)
 
-def convert_nodes_to_smart_contracts():
-    for node in fg_nodes:
-        pass
-        #node.node_i 
-        #node.investment_class 
-        #node.ownership_type
-        #node.investment_type
+def write_nodes_to_csv(file):
+    with open(file, 'w') as file:
+        writer = csv.writer(file)
+        header = ['node node_i', 'investment_class', 'ownership_type', 'investment_type']
+        writer.writerow(header)
 
-def run_transactions():
-    for tx_i, fg_transaction in fg_transactions.items():
-        pass
-        #fg_transaction.tx_i 
-        #fg_transaction.date 
-        #fg_transaction.transaction_type
-        #effect = fg_transaction.effect
+        for node_id in fg_nodes:
+            print(fg_nodes[node_id])
+            node = fg_nodes[node_id]
+            data = [node.node_i, node.investment_class, node.ownership_type, node.investment_type]
+            writer.writerow(data)
 
-        #effect.e_i
-        #effect.tx_i
-        #effect.edge_i
-        #effect.currency
-        #effect.is_credit
+def write_transactions_to_csv(file):
+    with open(file, 'w') as file:
+        writer = csv.writer(file)
+        header = ['tx_i', 'date', 'transaction_type', 'effect e_i','effect tx_i', 'effect edge_i', 'effect currency', 'effect is_credit']
+        writer.writerow(header)
+        
+        for tx_i, fg_transaction in fg_transactions.items():
+            effect = fg_transaction.effect
+            data = [fg_transaction.tx_i, fg_transaction.date, fg_transaction.transaction_type, effect.e_i, effect.tx_i, effect.edge_i,effect.currency, effect.is_credit ]
+            writer.writerow(data)
         
 fg_nodes = {}
 fg_edges = {}
@@ -157,6 +158,7 @@ print ("Num Effects=" + str(len(fg_effects)))
 fill_transactions_with_effects()
 print(fg_transactions[22])
 
-convert_nodes_to_smart_contracts()
+write_nodes_to_csv("parsed/nodes.csv")
+write_transactions_to_csv("parsed/transactions.csv")
 
 #run_transactions()
