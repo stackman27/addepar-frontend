@@ -27,7 +27,9 @@
     "hardhat": "^2.9.3"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^4.6.0",
     "csv": "^6.0.5",
+    "csv-parse": "^5.0.4",
     "dotenv": "^16.0.0"
   }
 }

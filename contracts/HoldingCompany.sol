@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+import "./PrivateEquity.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
-contract HoldingCompany {
-    string name;
+
+contract HoldingCompany is IERC721Receiver {
+    string public name;
     event CommitOccurred(address to, uint256 amount);
     event TransferOccurred(address to, uint256 amount);
     
@@ -38,11 +41,24 @@ contract HoldingCompany {
     // User contributes amount of holding company's funds to private equity
     function contribute(address to, uint256 amount, uint256 txId) public returns (uint256) {
         commitments[to] = 0;
-        (bool success, bytes memory result) = to.call{value: amount, gas: 1000000}(abi.encodeWithSignature("contribute(uint,uint)", amount, txId));
-        if (success) {
-            emit TransferOccurred(to, amount);
-            return amount;
-        }
+        PrivateEquity pe = PrivateEquity(to);
+        pe.contribute{value: amount}(amount, txId);
+        emit TransferOccurred(to, amount);
         return 0;
     }
+    function getBalance() public view returns(uint256) {
+        return address(this).balance;
+    }
+    function topUp(uint256 amount) payable public {
+        require(msg.value == amount);
+        return;
+    }
+    function onERC721Received(
+    address, 
+    address, 
+    uint256, 
+    bytes calldata
+    ) external override (IERC721Receiver) returns(bytes4) {
+    return bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"));
+} 
 }

@@ -4,7 +4,7 @@ import "./NFTFactory.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract PrivateEquity {
-    uint256 id;
+    uint256 public id;
     NFTFactory nftFactory;
     string header;
     
@@ -28,6 +28,13 @@ contract PrivateEquity {
     function distribute(address payable to, uint256 amount) public {
         to.transfer(amount);
         emit Distribution(to, amount);
+        return;
+    }
+    function getBalance() public view returns(uint256) {
+        return address(this).balance;
+    }
+    function topUp(uint256 amount) payable public {
+        require(msg.value == amount);
         return;
     }
 }
