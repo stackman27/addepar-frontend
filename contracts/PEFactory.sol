@@ -13,7 +13,7 @@ contract PEFactory {
         nftFactory = _nftFactory;
     }
 
-    function addPrivateEquity (uint256 id) public returns (address){
+    function addPrivateEquity(uint256 id) public returns (address) {
         PrivateEquity pe = new PrivateEquity(id, nftFactory);
         address addr = address(pe);
         private_equities[id] = addr;
