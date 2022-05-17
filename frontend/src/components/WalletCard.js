@@ -1,11 +1,13 @@
 import React, {useState} from 'react'
+import { Text, Flex, Button } from '@chakra-ui/react'
 import {ethers} from 'ethers'
 
 const WalletCard = () => {
     const [errorMessage, setErrorMessage] = useState(null);
 	const [defaultAccount, setDefaultAccount] = useState(null);
 	const [userBalance, setUserBalance] = useState(null);
-	const [connButtonText, setConnButtonText] = useState('Connect Wallet');
+	const [isWalletConnected, setWalletConnected] = useState(false);
+	 
 
 	const connectWalletHandler = () => {
 		if (window.ethereum && window.ethereum.isMetaMask) {
@@ -14,8 +16,8 @@ const WalletCard = () => {
 			window.ethereum.request({ method: 'eth_requestAccounts'})
 			.then(result => {
 				accountChangedHandler(result[0]);
-				setConnButtonText('Wallet Connected');
 				getAccountBalance(result[0]);
+				setWalletConnected(true)
 			})
 			.catch(error => {
 				setErrorMessage(error.message);
@@ -57,15 +59,11 @@ const WalletCard = () => {
 	
 	return (
 		<div className='walletCard'>
-		<h4> {"Connection to MetaMask using window.ethereum methods"} </h4>
-			<button onClick={connectWalletHandler}>{connButtonText}</button>
-			<div className='accountDisplay'>
-				<h3>Address: {defaultAccount}</h3>
-			</div>
-			<div className='balanceDisplay'>
-				<h3>Balance: {userBalance}</h3>
-			</div>
-			{errorMessage}
+			{!isWalletConnected ? 
+	 		<Button bgGradient='linear(to-r, #976781, #B0624E, #EACEA8)' color='white' onClick={connectWalletHandler}>Connect Wallet</Button>
+			:
+			<Button bgGradient='linear(to-r, #976781, #B0624E, #EACEA8)' color='white'>{defaultAccount.substring(0, 5)+'...'+defaultAccount.slice(-5)}</Button>
+			}
 		</div>
 	);
 }
